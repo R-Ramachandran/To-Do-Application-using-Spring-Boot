@@ -1,0 +1,42 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Meta Tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Title -->
+		<title>Todo App</title>
+
+		<!-- Imported CSS -->
+		<link href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+		<link href="webjars/font-awesome/5.11.2/css/fontawesome.min.css" rel="stylesheet">
+		<link href="webjars/font-awesome/5.11.2/css/solid.min.css" rel="stylesheet">
+		<link href="webjars/font-awesome/5.11.2/css/regular.min.css" rel="stylesheet">
+		<link href="webjars/font-awesome/5.11.2/css/brands.min.css" rel="stylesheet">
+		<link href="webjars/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+
+		<!-- Custom CSS -->
+		<style type="text/css">
+			html, body {
+				height: 100%;
+			}
+			.custom-container-1 {
+				width: 500px;
+				background-color: rgba(0,0,0,0.3);
+			}
+			.custom-container-2 {
+				width: 400px;
+				background-color: rgb(255,255,255);
+			}
+			.custom-h-100 {
+				min-height: 100%;
+				height: fit-content;
+			}
+		</style>
+	</head>
+	<body>
