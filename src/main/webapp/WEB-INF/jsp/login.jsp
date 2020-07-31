@@ -14,9 +14,11 @@
 						<input class="form-control" type="password" id="password" name="password">
 					</div>
 					<input class="btn btn-primary btn-block" type="submit">
-					<div class="text-danger">
-						${ validation }
-					</div>
+					<c:if test="${param.error != null}">
+						<div class="text-danger pt-1">
+							Invalid User ID and Password
+						</div>
+					</c:if>
 				</form>
 			</div>
 		</div>

@@ -22,16 +22,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
 		PasswordEncoder passwordEncoder = NoOpPasswordEncoder.getInstance();
-		auth.inMemoryAuthentication().passwordEncoder(passwordEncoder);
+		auth.jdbcAuthentication().passwordEncoder(passwordEncoder)
+			.dataSource(dataSource)
+			.usersByUsernameQuery("select user_id, password, enabled from person where user_id=?")
+			.authoritiesByUsernameQuery("select user_id, role from person where user_id=?");
 	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		/*
 		http.authorizeRequests()
-			.antMatchers("/", "/login").permitAll()
-			.antMatchers("/*todo*/**").access("hasRole('USER')").and()
+			.antMatchers("/", "/login").permitAll()*/
+		//	.antMatchers("/*todo*/**").access("hasRole('USER')").and()
+		/*	.formLogin()
+				.loginPage("/login").defaultSuccessUrl("/welcome").and().logout().clearAuthentication(true);
+		*/
+		http.authorizeRequests()
+			.antMatchers("/","/login").permitAll().and()
+			.authorizeRequests()
+			.antMatchers("/","/login","/todo-list","/add-todo","/update-todo","/delete-todo","/welcome","/cancel").authenticated().and()
 			.formLogin()
-				.loginPage("login");
+				.loginPage("/login").defaultSuccessUrl("/welcome").and().logout().logoutSuccessUrl("/login").permitAll();
+		
+		http.csrf().disable();
 	}
 	
 }

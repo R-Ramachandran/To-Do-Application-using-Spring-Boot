@@ -6,6 +6,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -41,10 +43,24 @@ public class TodoController {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		binder.registerCustomEditor(Todo.class, new CustomDateEditor(dateFormat, false));
 	}
+	
+	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
+	public String getWelcomePage(ModelMap model) {
+		User user = userRepository.findUserByUserId(getLoggedInUsername());
+		model.put("name", user.getName());
+		return "welcome";
+	}
+	
+	private String getLoggedInUsername() {
+		Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if(principle instanceof UserDetails)
+			return ((UserDetails) principle).getUsername();
+		return principle.toString();
+	}
 
 	@RequestMapping(value = "/todo-list", method = RequestMethod.GET)
 	public String getTodoPage(ModelMap model) {
-		String username = getLoggedInUsername(model); 
+		String username = getLoggedInUsername(); 
 		User user = userRepository.findUserByUserId(username);
 		long userId = user.getId();
 		model.put("name", user.getName());
@@ -54,7 +70,7 @@ public class TodoController {
 	
 	@RequestMapping(value = "/add-todo", method = RequestMethod.GET)
 	public String getAddTodoPage(ModelMap model) {
-		String username = getLoggedInUsername(model); 
+		String username = getLoggedInUsername(); 
 		User user = userRepository.findUserByUserId(username);
 		model.put("name", user.getName());
 		model.put("newOrUpdate", "Add");
@@ -71,7 +87,7 @@ public class TodoController {
 	
 	@RequestMapping(value = "/update-todo", method = RequestMethod.GET)
 	public String updateTodoFromList(ModelMap model, @RequestParam long id) {
-		String username = getLoggedInUsername(model); 
+		String username = getLoggedInUsername(); 
 		User user = userRepository.findUserByUserId(username);
 		model.put("name", user.getName());
 		model.put("newOrUpdate", "Update");
@@ -82,7 +98,7 @@ public class TodoController {
 	
 	@RequestMapping(value = "/update-todo", method = RequestMethod.POST)
 	public String postUpdatedTodoByUser(@Valid @ModelAttribute("todo") Todo todo, BindingResult bindingResult, ModelMap model) {
-		String username = getLoggedInUsername(model); 
+		String username = getLoggedInUsername(); 
 		User user = userRepository.findUserByUserId(username);
 		if(bindingResult.hasErrors()) {
 			model.put("name", user.getName());
@@ -97,12 +113,12 @@ public class TodoController {
 		model.put("todos", todoRepository.findByUserId(user.getId()));
 		return "redirect:todo-list";
 	}
-
+/*
 	public String getLoggedInUsername(ModelMap model) {
 		String username = (String) model.get("username");
 		return username;
 	}
-	
+*/
 	@RequestMapping(value = "/cancel", method = RequestMethod.GET)
 	public String cancelToRedirect() {
 		return "redirect:todo-list";
@@ -110,7 +126,7 @@ public class TodoController {
 	
 	@RequestMapping(value = "/add-todo", method = RequestMethod.POST)
 	public String postAddTodo(@Valid @ModelAttribute("todo") Todo todo, BindingResult bindingResult, ModelMap model) {
-		String username = getLoggedInUsername(model); 
+		String username = getLoggedInUsername(); 
 		User user = userRepository.findUserByUserId(username);
 		if(bindingResult.hasErrors()) {
 			model.put("name", user.getName());
